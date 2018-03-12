@@ -1,0 +1,2 @@
+# big-data-querier
+Given a data set collection, design and implement a query  interface that helps users compare columns and sets of value. For example, the interface should support the following queries:(1) What are the columns that values x and y both occur in (and z does not occur in). This type of query returns a set of column ids. (2) Given a set of column ids what (a) is the intersection of the values in the columns, (b) are the most frequent values in the column set (where frequency is the number of columns a value occurs in).
