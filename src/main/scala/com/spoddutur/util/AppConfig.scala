@@ -9,6 +9,9 @@ import com.typesafe.config.ConfigFactory
   */
 object AppConfig {
 
+  // added
+  val hfsBasePath = "hdfs://localhost:9000/test/"
+
   val conf = ConfigFactory.load
   val sparkMasterDef = conf.getString("spark.master")
   val sparkAppNameDef = conf.getString("spark.appname")

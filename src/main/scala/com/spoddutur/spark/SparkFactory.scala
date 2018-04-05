@@ -15,4 +15,15 @@ object SparkFactory {
 
   val sc = spark.sparkContext
   val sparkConf = sc.getConf
+
+  /**
+    * in an ideal world, memory resource is unlimited so we can load all the tables in memory
+    *
+    * now, pre-load the movie dataset for testing purpose
+    * */
+
+  // var rdds:Map[String, RDD] = Map()
+  // val moviesPath = AppConfig.hfsBasePath + "movies_metadata.csv"
+  // val movies = spark.read.format("csv").option("header", "true").load(moviesPath)
+
 }
