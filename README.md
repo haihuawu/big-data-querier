@@ -17,7 +17,7 @@ This application comes as Spark2.1-REST-Service-Provider using an embedded, Reac
 ## Dependency
 This project requires spray-json as an external dependency. Make sure you download it [here](https://search.maven.org/#artifactdetails%7Cio.spray%7Cspray-json_2.11%7C1.3.4%7Cbundle) and add it as a dependency
 ```markdown
-mvn install:install-file -Dfile=spray-json_2.12-1.3.4.jar -DgroupId=io.spray -DartifactId=spray-json -Dversion=1.3.4 -Dpackaging=jar
+mvn install:install-file -Dfile=spray-json_2.11-1.3.4.jar -DgroupId=io.spray -DartifactId=spray-json -Dversion=1.3.4 -Dpackaging=jar
 ```
 
 ## Building
