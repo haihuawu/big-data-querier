@@ -1,6 +1,6 @@
-package com.spoddutur.spark
+package com.bigdata.spark
 
-import com.spoddutur.util.AppConfig
+import com.bigdata.util.AppConfig
 import org.apache.spark.sql.SparkSession
 
 /**

@@ -1,6 +1,6 @@
 import akka.http.scaladsl.settings.ServerSettings
-import com.spoddutur.util.AppConfig
-import com.spoddutur.web.WebServer
+import com.bigdata.util.AppConfig
+import com.bigdata.web.WebServer
 import com.typesafe.config.ConfigFactory
 
 /**

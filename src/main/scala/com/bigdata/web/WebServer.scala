@@ -1,4 +1,4 @@
-package com.spoddutur.web
+package com.bigdata.web
 
 /**
   * Created by sruthi on 03/07/17.
@@ -7,8 +7,8 @@ package com.spoddutur.web
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.{HttpApp, Route}
-import com.spoddutur.spark.SparkFactory
-import com.spoddutur.service.SingleProfile
+import com.bigdata.spark.SparkFactory
+import com.bigdata.service.SingleProfile
 
 /**
   * Http Server definition

@@ -1,6 +1,6 @@
-package com.spoddutur.web
+package com.bigdata.web
 
-import com.spoddutur.spark.SparkFactory
+import com.bigdata.spark.SparkFactory
 
 /**
   * Created by sruthi on 03/07/17.

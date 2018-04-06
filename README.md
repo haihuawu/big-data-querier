@@ -15,7 +15,7 @@ This application comes as Spark2.1-REST-Service-Provider using an embedded, Reac
 * make sure hadoop core-site.xml, set url to ```hdfs://localhost:9000```, because it is set up as the hdfs address in this project in ```AppConfig.scala```
 
 ## Dependency
-This project requires spray-json as an external dependency. Make sure you download it [here](https://search.maven.org/#artifactdetails%7Cio.spray%7Cspray-json_2.12%7C1.3.4%7Cbundle) and add it as a dependency
+This project requires spray-json as an external dependency. Make sure you download it [here](https://search.maven.org/#artifactdetails%7Cio.spray%7Cspray-json_2.11%7C1.3.4%7Cbundle) and add it as a dependency
 ```markdown
 mvn install:install-file -Dfile=spray-json_2.12-1.3.4.jar -DgroupId=io.spray -DartifactId=spray-json -Dversion=1.3.4 -Dpackaging=jar
 ```

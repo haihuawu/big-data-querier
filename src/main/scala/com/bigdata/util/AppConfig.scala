@@ -1,4 +1,4 @@
-package com.spoddutur.util
+package com.bigdata.util
 
 import com.typesafe.config.ConfigFactory
 
