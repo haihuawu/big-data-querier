@@ -12,7 +12,7 @@ object MainApp extends App {
   AppConfig.parse(this.args.toList)
 
   // Starting the server
-  WebServer.startServer("localhost", AppConfig.akkaHttpPort, ServerSettings(ConfigFactory.load))
+  WebServer.startServer("0.0.0.0", AppConfig.akkaHttpPort, ServerSettings(ConfigFactory.load))
 
   println(s"Server online at http://localhost:", AppConfig.akkaHttpPort, "/")
 }
