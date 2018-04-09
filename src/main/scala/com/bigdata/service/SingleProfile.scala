@@ -28,7 +28,7 @@ object SingleProfile {
     val data = file.groupBy(col(column)).count().collect()
     val result = jsonFormat(data)
     Cache.putInCache(key, result)
-    return jsonFormat(data)
+    return result
   }
 
   /**

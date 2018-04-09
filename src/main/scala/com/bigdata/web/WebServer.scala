@@ -4,12 +4,16 @@ package com.bigdata.web
   * Created by sruthi on 03/07/17.
   */
 
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
+import akka.http.scaladsl.model.headers._
+import akka.http.scaladsl.model.HttpHeader._
+import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{HttpApp, Route}
+import akka.http.scaladsl.server.{Directive0, HttpApp, Route}
 import com.bigdata.spark.SparkFactory
 import com.bigdata.service.SingleProfile
-
+import akka.http.scaladsl.model.HttpMethods._
+import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
+import akka.http.scaladsl.model.headers._
 /**
   * Http Server definition
   * Configured 4 routes:
@@ -18,7 +22,7 @@ import com.bigdata.service.SingleProfile
   * 3. activeStreams - http://host:port/activeStreams - tells how many spark streams are active currently
   * 4. count - http://host:port/count - random spark job to count a seq of integers
   */
-object WebServer extends HttpApp {
+object WebServer extends HttpApp with CORSHandler {
 
   case class Colour(r: Int, g: Int, b: Int) {
     require(r >= 0 && r <= 255, "Wrong color pallete")
@@ -26,8 +30,9 @@ object WebServer extends HttpApp {
     require(b >= 0 && b <= 255, "Wrong color pallete")
   }
 
+
   override def routes: Route = {
-    pathEndOrSingleSlash {
+    corsHandler(pathEndOrSingleSlash {
       get {
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Hello World!! This is Akka responding..</h1>"))
       }
@@ -73,6 +78,6 @@ object WebServer extends HttpApp {
             s"(R,G,B): ${r1}, ${g}, ${b}"
           }
         }
-      }
+      })
   }
 }
