@@ -49,7 +49,9 @@ object WebServer extends HttpApp {
       } ~
       path("single-profile") {
         get {
-          complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile("movies_metadata", "genres")))
+          parameter('table.as[String], 'column.as[String]) { (table, column) =>
+            complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile(table, column)))
+          }
         }
       } ~
       path("customer" / IntNumber) { id =>
