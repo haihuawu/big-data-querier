@@ -32,6 +32,13 @@ object WebServer extends HttpApp {
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Hello World!! This is Akka responding..</h1>"))
       }
     } ~
+      path("single-profile") {
+        get {
+          parameter('table.as[String], 'column.as[String]) { (table, column) =>
+            complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile(table, column)))
+          }
+        }
+      } ~
       path("version") {
         get {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Spark version: ${SparkFactory.sc.version}</h1>"))
@@ -45,13 +52,6 @@ object WebServer extends HttpApp {
       path("count") {
         get {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Count 0 to 500000 using Spark with 25 partitions: ${HttpService.count()}"))
-        }
-      } ~
-      path("single-profile") {
-        get {
-          parameter('table.as[String], 'column.as[String]) { (table, column) =>
-            complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile(table, column)))
-          }
         }
       } ~
       path("customer" / IntNumber) { id =>

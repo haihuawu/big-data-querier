@@ -1,9 +1,10 @@
 package com.bigdata.service
 
 import com.bigdata.spark.SparkFactory
-import com.bigdata.util.AppConfig
+import com.bigdata.util.{AppConfig, Cache, Util}
 import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.functions.format_string
+
 import scala.collection.mutable.StringBuilder
 import spray.json._
 import DefaultJsonProtocol._
@@ -14,21 +15,19 @@ import org.apache.commons.lang.StringEscapeUtils
 // if you don't supply your own Protocol (see below)
 
 object SingleProfile {
-  /**
-    *
-    * @param table
-    * @param column
-    * @return JSON String
-    */
+
+  val singleProfile = "single-profile"
+
   def getSingleProfile(table: String, column: String): String = {
-    /**
-      * TODO:
-      * file can be pre-loaded to improve performance
-      **/
+    val  key = Util.concat(singleProfile, table, column)
+    if (Cache.hasKey(key)) {
+      return Cache.getFromCache(key)
+    }
     val path = AppConfig.hfsBasePath + table + ".csv"
     val file = SparkFactory.spark.read.format("csv").option("header", "true").load(path)
     val data = file.groupBy(col(column)).count().collect()
-    // .select(format_string("%s\t%d", col(column), col("count")))
+    val result = jsonFormat(data)
+    Cache.putInCache(key, result)
     return jsonFormat(data)
   }
 
