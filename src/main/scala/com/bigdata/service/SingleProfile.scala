@@ -3,7 +3,7 @@ package com.bigdata.service
 import com.bigdata.spark.SparkFactory
 import com.bigdata.util.{AppConfig, Cache, Util}
 import org.apache.spark.sql.functions.col
-import org.apache.spark.sql.functions.format_string
+import org.apache.spark.sql.functions._
 
 import scala.collection.mutable.StringBuilder
 import spray.json._
@@ -25,7 +25,7 @@ object SingleProfile {
     }
     val path = AppConfig.hfsBasePath + table + ".csv"
     val file = SparkFactory.spark.read.format("csv").option("header", "true").load(path)
-    val data = file.groupBy(col(column)).count().collect()
+    val data = file.groupBy(col(column)).count().sort(desc("count")).collect()
     val result = jsonFormat(data)
     Cache.putInCache(key, result)
     return result
