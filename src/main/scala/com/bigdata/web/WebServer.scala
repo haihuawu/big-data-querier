@@ -1,19 +1,11 @@
 package com.bigdata.web
 
-/**
-  * Created by sruthi on 03/07/17.
-  */
-
-import akka.http.scaladsl.model.headers._
-import akka.http.scaladsl.model.HttpHeader._
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.server.Directives._
-import akka.http.scaladsl.server.{Directive0, HttpApp, Route}
+import akka.http.scaladsl.server.{HttpApp, Route}
 import com.bigdata.spark.SparkFactory
 import com.bigdata.service.SingleProfile
-import akka.http.scaladsl.model.HttpMethods._
-import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
-import akka.http.scaladsl.model.headers._
+import com.bigdata.service.ColumnValue
+
 /**
   * Http Server definition
   * Configured 4 routes:
@@ -37,10 +29,25 @@ object WebServer extends HttpApp with CORSHandler {
         complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Hello World!! This is Akka responding..</h1>"))
       }
     } ~
+
+      /**
+        * ?table=table_name&column=column_name
+        */
       path("single-profile") {
         get {
           parameter('table.as[String], 'column.as[String]) { (table, column) =>
             complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile(table, column)))
+          }
+        }
+      } ~
+
+      /**
+        * ?table=table_name&hasVal=a,b&notHasVal=c
+        */
+      path("column-value") {
+        get {
+          parameter('table.as[String], 'hasVal.as[String], 'notHasVal.as[String]) { (table, hasVal, notHasVal) =>
+            complete(HttpEntity(ContentTypes.`application/json`, ColumnValue.getColumns(table, hasVal, notHasVal)))
           }
         }
       } ~
