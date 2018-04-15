@@ -1,5 +1,10 @@
 package com.bigdata.service
 
+import org.apache.spark.sql.DataFrame
+import com.bigdata.util.{AppConfig, Cache, Util}
+import com.bigdata.spark.SparkFactory
+import org.apache.commons.lang.StringEscapeUtils
+
 /**
   * Yo huahua:
   *
@@ -14,5 +19,47 @@ package com.bigdata.service
   * look at ColumnValue, SingleProfile for some coding example
   * */
 object ColumnSimilarity {
+
+  def computeSimilarity(tablea: String, tableb: String, columna : String, columnb : String): String = {
+
+    val computeSimilarity = "compute-similarity"
+
+    val dfa = getDataFrameByTable(tablea).select(columna)
+    val dfb = getDataFrameByTable(tableb).select(columnb)
+
+    val rdda = dfa.rdd
+    val rddb = dfb.rdd
+
+    val mapc1 = rdda.map(s => (s, 1)).groupByKey().map({case(k,v) => (k, ("C1", v.size))})
+    val mapc2 = rddb.map(s => (s, 1)).groupByKey().map({case(k,v) => (k, ("C2", v.size))})
+
+    val map_union = mapc1.union(mapc2).groupByKey()
+
+    val total_count = map_union.count()
+
+    map_union.filter({case(k,v) => v.size == 2})
+
+    val similar_count = map_union.count()
+
+    val similarity : Float = similar_count.toFloat/total_count.toFloat
+    val result = jsonFormat(similarity)
+
+    return result
+  }
+
+  def getDataFrameByTable(table: String): DataFrame = {
+    val path = AppConfig.hfsBasePath + table + ".csv"
+    val file = SparkFactory.spark.read.format("csv").option("header", "true").load(path)
+    return file
+  }
+
+  def jsonFormat(simi : Float): String = {
+    val json = StringBuilder.newBuilder
+    json.append("[")
+    json.append("Similarity : ")
+    json.append(simi.toString())
+    json.append("]")
+    return json.toString()
+  }
 
 }

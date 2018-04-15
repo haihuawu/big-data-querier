@@ -5,6 +5,7 @@ import akka.http.scaladsl.server.{HttpApp, Route}
 import com.bigdata.spark.SparkFactory
 import com.bigdata.service.SingleProfile
 import com.bigdata.service.ColumnValue
+import com.bigdata.service.ColumnSimilarity
 
 /**
   * Http Server definition
@@ -48,6 +49,13 @@ object WebServer extends HttpApp with CORSHandler {
         get {
           parameter('table.as[String], 'hasVal.as[String], 'notHasVal.as[String]) { (table, hasVal, notHasVal) =>
             complete(HttpEntity(ContentTypes.`application/json`, ColumnValue.getColumns(table, hasVal, notHasVal)))
+          }
+        }
+      } ~
+      path("compute-similarity") {
+        get {
+          parameter('tablea.as[String], 'tableb.as[String], 'columna.as[String], 'columnb.as[String]) { (tablea, tableb, columna, columnb) =>
+            complete(HttpEntity(ContentTypes.`application/json`, ColumnSimilarity.computeSimilarity(tablea, tableb, columna, columnb)))
           }
         }
       } ~
