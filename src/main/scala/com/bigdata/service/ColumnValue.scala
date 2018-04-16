@@ -5,7 +5,6 @@ import com.bigdata.util.{AppConfig, Cache, Util}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.commons.lang.StringEscapeUtils
-
 import scala.collection.mutable.ListBuffer
 
 object ColumnValue {

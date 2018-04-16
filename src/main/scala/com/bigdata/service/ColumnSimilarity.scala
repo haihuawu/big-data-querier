@@ -20,10 +20,13 @@ import org.apache.commons.lang.StringEscapeUtils
   * */
 object ColumnSimilarity {
 
-  def computeSimilarity(tablea: String, tableb: String, columna : String, columnb : String): String = {
+  val jaccardSimilarity = "jaccard-similarity"
 
-    val computeSimilarity = "compute-similarity"
-
+  def jaccardSimilarity(tablea: String, tableb: String, columna : String, columnb : String): String = {
+    val key = getKey(tablea, tableb, columna, columnb)
+    if (Cache.hasKey(key)) {
+      return Cache.getFromCache(key)
+    }
     val dfa = getDataFrameByTable(tablea).select(columna)
     val dfb = getDataFrameByTable(tableb).select(columnb)
 
@@ -43,8 +46,12 @@ object ColumnSimilarity {
 
     val similarity : Float = similar_count.toFloat/total_count.toFloat
     val result = jsonFormat(similarity)
-
+    Cache.putInCache(key, result)
     return result
+  }
+
+  def getKey(tablea: String, tableb: String, columna: String, columnb: String): String = {
+    Util.concat(jaccardSimilarity,  tablea, tableb, columna, columnb)
   }
 
   def getDataFrameByTable(table: String): DataFrame = {
@@ -55,10 +62,10 @@ object ColumnSimilarity {
 
   def jsonFormat(simi : Float): String = {
     val json = StringBuilder.newBuilder
-    json.append("[")
-    json.append("Similarity : ")
+    json.append("{")
+    json.append("val:")
     json.append(simi.toString())
-    json.append("]")
+    json.append("}")
     return json.toString()
   }
 

@@ -52,10 +52,10 @@ object WebServer extends HttpApp with CORSHandler {
           }
         }
       } ~
-      path("compute-similarity") {
+      path("jaccard-similarity") {
         get {
           parameter('tablea.as[String], 'tableb.as[String], 'columna.as[String], 'columnb.as[String]) { (tablea, tableb, columna, columnb) =>
-            complete(HttpEntity(ContentTypes.`application/json`, ColumnSimilarity.computeSimilarity(tablea, tableb, columna, columnb)))
+            complete(HttpEntity(ContentTypes.`application/json`, ColumnSimilarity.jaccardSimilarity(tablea, tableb, columna, columnb)))
           }
         }
       } ~
