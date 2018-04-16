@@ -5,7 +5,8 @@ import com.bigdata.util.{AppConfig, Cache, Util}
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions._
 import org.apache.commons.lang.StringEscapeUtils
-import scala.collection.mutable.ListBuffer
+
+import scala.collection.mutable.{ListBuffer, StringBuilder}
 
 object ColumnValue {
 
@@ -43,24 +44,24 @@ object ColumnValue {
     return result.toList
   }
 
-  def getHasList(df: DataFrame, value: String, columns: List[String]): List[String] = {
-    val result = ListBuffer[String]()
+  def getHasList(df: DataFrame, value: String, columns: List[String]): List[Tuple2[String, Long]] = {
+    val result = ListBuffer[Tuple2[String, Long]]()
     val list = getValueList(value)
     columns.foreach(column => {
       val filtered = df.filter(col(column).isin(list: _*))
-      if (filtered.count() > 0) result += column
+      if (filtered.count() > 0) result += Tuple2(column, filtered.count())
     })
     return result.toList
   }
 
-  def getNotHasList(df: DataFrame, value: String, columns: List[String]): List[String] = {
-    val result = ListBuffer[String]()
+  def getNotHasList(df: DataFrame, value: String, columns: List[(String, Long)]): List[Tuple2[String, Long]] = {
+    val result = ListBuffer[Tuple2[String, Long]]()
     val list = getValueList(value)
     if (list.isEmpty) {
       return columns
     }
     columns.foreach(column => {
-      val filtered = df.filter(col(column).isin(list: _*))
+      val filtered = df.filter(col(column._1).isin(list: _*))
       if (filtered.count() == 0) result += column
     })
     return result.toList
@@ -74,21 +75,41 @@ object ColumnValue {
     return result.toList
   }
 
-  def jsonFormat(ls: List[String]): String = {
-    val json = StringBuilder.newBuilder
-    json.append("[")
-    ls.foreach(value => {
-      json.append("\"")
-      json.append(StringEscapeUtils.escapeJava(value))
-      json.append("\"")
-      json.append(",")
+  def jsonFormat(ls: List[Tuple2[String, Long]]): String = {
+    val builder = StringBuilder.newBuilder
+    builder.append("{")
+    builder.append("\"data\":[")
+    var appendCount = 0
+    ls.foreach(row => {
+      var value = ""
+      var count = 0L
+      var shouldAppend = true
+      try {
+        value = StringEscapeUtils.escapeJava(row._1)
+        count = row._2
+      } catch {
+        case _: Throwable => {
+          shouldAppend = false
+        }
+      }
+      if (shouldAppend) {
+        builder.append("{\"val\":\"")
+        builder.append(value)
+        builder.append("\", \"count\":")
+        builder.append(count)
+        builder.append("}")
+        builder.append(",")
+        appendCount+=1
+      }
     })
-    // remove last comma
-    if (ls.nonEmpty) {
-      json.deleteCharAt(json.size - 1)
+    if (appendCount > 0) {
+      // remove last comma
+      builder.deleteCharAt(builder.length - 1)
     }
-    json.append("]")
-    return json.toString()
+    builder.append("]}")
+
+    return builder.toString()
+    // return "hello..."
   }
 
 }
