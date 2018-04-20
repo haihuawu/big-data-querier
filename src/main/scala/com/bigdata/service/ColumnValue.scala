@@ -44,8 +44,8 @@ object ColumnValue {
     return result.toList
   }
 
-  def getHasList(df: DataFrame, value: String, columns: List[String]): List[Tuple2[String, Long]] = {
-    val result = ListBuffer[Tuple2[String, Long]]()
+  def getHasList(df: DataFrame, value: String, columns: List[String]): List[(String, Long)] = {
+    val result = ListBuffer[(String, Long)]()
     val list = getValueList(value)
     columns.foreach(column => {
       val filtered = df.filter(col(column).isin(list: _*))
@@ -54,8 +54,8 @@ object ColumnValue {
     return result.toList
   }
 
-  def getNotHasList(df: DataFrame, value: String, columns: List[(String, Long)]): List[Tuple2[String, Long]] = {
-    val result = ListBuffer[Tuple2[String, Long]]()
+  def getNotHasList(df: DataFrame, value: String, columns: List[(String, Long)]): List[(String, Long)] = {
+    val result = ListBuffer[(String, Long)]()
     val list = getValueList(value)
     if (list.isEmpty) {
       return columns

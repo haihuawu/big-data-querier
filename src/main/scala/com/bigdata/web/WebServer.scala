@@ -3,10 +3,7 @@ package com.bigdata.web
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.server.{HttpApp, Route}
 import com.bigdata.spark.SparkFactory
-import com.bigdata.service.SingleProfile
-import com.bigdata.service.ColumnValue
-import com.bigdata.service.ColumnSimilarity
-
+import com.bigdata.service._
 /**
   * Http Server definition
   * Configured 4 routes:
@@ -38,6 +35,20 @@ object WebServer extends HttpApp with CORSHandler {
         get {
           parameter('table.as[String], 'column.as[String]) { (table, column) =>
             complete(HttpEntity(ContentTypes.`application/json`, SingleProfile.getSingleProfile(table, column)))
+          }
+        }
+      } ~
+      path("table-column") {
+        get {
+          parameter('table.as[String]) { (table) =>
+            complete(HttpEntity(ContentTypes.`application/json`, TableColumns.getTableColumns(table)))
+          }
+        }
+      } ~
+      path("common-value") {
+        get {
+          parameter('tables.as[String], 'columns.as[String]) { (tables, columns) =>
+            complete(HttpEntity(ContentTypes.`application/json`, CommonValue.getCommonValues(tables, columns)))
           }
         }
       } ~
