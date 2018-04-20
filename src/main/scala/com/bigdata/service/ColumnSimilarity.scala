@@ -63,7 +63,7 @@ object ColumnSimilarity {
   def jsonFormat(simi : Float): String = {
     val json = StringBuilder.newBuilder
     json.append("{")
-    json.append("\"val:\"")
+    json.append("\"val\" : ")
     json.append(simi.toString())
     json.append("}")
     return json.toString()
