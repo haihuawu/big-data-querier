@@ -53,7 +53,39 @@ object JsonFormat {
     }
     builder.append("]}")
 
-    return builder.toString()
-    // return "hello..."
+    builder.toString()
+  }
+
+  def formatNumberArray(array: Array[Row]): String = {
+    val builder = StringBuilder.newBuilder
+    builder.append("{")
+    builder.append("\"data\":[")
+    var appendCount = 0
+    array.foreach(row => {
+      var shouldAppend = true
+      var var1 = 0d
+      var var2 = 0d
+      try {
+        var1 = row(0).toString.toFloat
+        var2 = row(1).toString.toFloat
+      } catch {
+        case _: Throwable => {
+          shouldAppend = false
+        }
+      }
+      if (shouldAppend) {
+        appendCount = appendCount + 1
+        builder.append("[")
+        builder.append(var1)
+        builder.append(",")
+        builder.append(var2)
+        builder.append("],")
+      }
+    })
+    if (appendCount > 0) {
+      builder.deleteCharAt(builder.length - 1)
+    }
+    builder.append("]}")
+    builder.toString()
   }
 }

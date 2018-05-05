@@ -63,6 +63,7 @@ object WebServer extends HttpApp with CORSHandler {
           }
         }
       } ~
+
       path("jaccard-similarity") {
         get {
           parameter('tablea.as[String], 'tableb.as[String], 'columna.as[String], 'columnb.as[String]) { (tablea, tableb, columna, columnb) =>
@@ -70,6 +71,16 @@ object WebServer extends HttpApp with CORSHandler {
           }
         }
       } ~
+
+
+      path("column-correlation") {
+        get {
+          parameter('table1.as[String], 'table2.as[String], 'column1.as[String], 'column2.as[String], 'join.as[String]) { (table1, table2, column1, column2, join) =>
+            complete(HttpEntity(ContentTypes.`application/json`, CrossTableCorrelation.getCorrelationArray(table1, table2, column1, column2, join)))
+          }
+        }
+      } ~
+
       path("version") {
         get {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Spark version: ${SparkFactory.sc.version}</h1>"))
