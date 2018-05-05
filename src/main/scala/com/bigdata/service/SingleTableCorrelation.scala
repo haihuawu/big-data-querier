@@ -36,20 +36,21 @@ object GetCorrelation {
     val result = ListBuffer[(Int, Int)]()
 
 
-    valueList.foreach(value => {
-      rdd = rdd.filter(item => item(0).toString().toInt >= value)
-      result += Tuple2(rdd.first()(0).toString().toInt, rdd.first()(1).toString().toInt)
-      })
-
-
-
-    val outputList = result.toList
-
-
-
-    val result = jsonFormat(similarity)
-    Cache.putInCache(key, result)
-    return result
+//    valueList.foreach(value => {
+//      rdd = rdd.filter(item => item(0).toString().toInt >= value)
+//      result += Tuple2(rdd.first()(0).toString().toInt, rdd.first()(1).toString().toInt)
+//      })
+//
+//
+//
+//    val outputList = result.toList
+//
+//
+//
+//    val result = jsonFormat(similarity)
+//    Cache.putInCache(key, result)
+//    return result
+    ""
   }
 
   def getValueList(min: Int, max: Int, factor: Int): List[Int] = {
