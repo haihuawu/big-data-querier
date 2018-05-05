@@ -3,6 +3,7 @@ package com.bigdata.service
 import com.bigdata.spark.SparkFactory
 import com.bigdata.util.{AppConfig, Cache, JsonFormat, Util}
 import org.apache.spark.sql._
+import org.apache.spark.sql.functions.col
 
 object CrossTableCorrelation {
 
@@ -18,11 +19,11 @@ object CrossTableCorrelation {
     var result = ""
     if (table1.equals(table2)) {
       val df = getDataFrameByTable(table1)
-      val array = df.select(column1, column2).rdd.takeSample(false, limit)
+      val array = df.select(column1, column2).filter(col(column1) =!= 0).filter(col(column2) =!= 0).rdd.takeSample(false, limit)
       result = JsonFormat.formatNumberArray(array)
     } else {
-      val df1 = getDataFrameByTable(table1).select(column1, join)
-      val df2 = getDataFrameByTable(table2).select(column2, join)
+      val df1 = getDataFrameByTable(table1).select(column1, join).filter(col(column1) =!= 0)
+      val df2 = getDataFrameByTable(table2).select(column2, join).filter(col(column2) =!= 0)
       result = JsonFormat.formatNumberArray(df1.join(df2, df1(join) === df2(join), "inner").rdd.takeSample(false, limit))
     }
     Cache.putInCache(key, result)
