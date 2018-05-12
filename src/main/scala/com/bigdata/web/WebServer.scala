@@ -72,6 +72,13 @@ object WebServer extends HttpApp with CORSHandler {
         }
       } ~
 
+      path("cosine-similarity") {
+        get {
+          parameter('table.as[String], 'columna.as[String], 'columnb.as[String]) { (table, columna, columnb) =>
+            complete(HttpEntity(ContentTypes.`application/json`, CosineSimilarity.cosineSimilarity(table, columna, columnb)))
+          }
+        }
+      } ~
 
       path("column-correlation") {
         get {
