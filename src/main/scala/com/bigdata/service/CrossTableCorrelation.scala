@@ -18,21 +18,24 @@ object CrossTableCorrelation {
       return Cache.getFromCache(key)
     }
     var result = ""
-    val rdd
+    var df = ""
     if (table1.equals(table2)) {
-      val df = getDataFrameByTable(table1)
-      rdd = df.select(column1, column2).filter(col(column1) =!= 0).filter(col(column2) =!= 0).rdd
+      df = getDataFrameByTable(table1).select(column1, column2).filter(col(column1) =!= 0).filter(col(column2) =!= 0)
     } else {
       val df1 = getDataFrameByTable(table1).select(column1, join).filter(col(column1) =!= 0)
       val df2 = getDataFrameByTable(table2).select(column2, join).filter(col(column2) =!= 0)
-      rdd = df1.join(df2, df1(join) === df2(join), "inner").rdd
+      df = df1.join(df2, df1(join) === df2(join), "inner")
     }
-    val array = rdd.takeSample(false, limit)
-    result = JsonFormat.formatNumberArray(array)
 
-    val seriesX: RDD[Double] = sc.parallelize()
+    val rdd = df.rdd
+    val array = rdd.takeSample(false, limit)
+
+    val seriesX = df.select(column1).rdd
+    val seriesY = df.select(column2).rdd
 
     val Double = Statistics.corr(seriesX, seriesY, "pearson")
+
+    result = JsonFormat.formatNumberArray(array)
 
     Cache.putInCache(key, result)
     result
