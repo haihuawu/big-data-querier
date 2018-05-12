@@ -35,7 +35,7 @@ object CosineSimilarity {
     val sim = mat.columnSimilarities();
     //sim.entries.collect()
 
-    val result = jsonFormat(sim)
+    val result = jsonFormat(columna,columnb,sim)
     Cache.putInCache(key, result)
     return result
   }
