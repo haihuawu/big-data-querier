@@ -13,11 +13,11 @@ object CosineSimilarity {
   val cosineSimilarity = "cosine-similarity"
 
   def cosineSimilarity(table: String, columna : String, columnb : String): String = {
-    val key = getKey(tablea, tableb, columna, columnb)
+    val key = getKey(table, columna, columnb)
     if (Cache.hasKey(key)) {
       return Cache.getFromCache(key)
     }
-    val dfa = getDataFrameByTable(tablea).select(columna, columnb)
+    val dfa = getDataFrameByTable(table).select(columna, columnb)
     var rdd = dfa.rdd
     rdd = rdd.filter(line => line(0) != null && line(1) != null)
     rdd = rdd.filter(line => line(0).toString() forall Character.isDigit)
@@ -40,8 +40,8 @@ object CosineSimilarity {
     return result
   }
 
-  def getKey(tablea: String, tableb: String, columna: String, columnb: String): String = {
-    Util.concat(cosineSimilarity,  tablea, tableb, columna, columnb)
+  def getKey(table: String, columna: String, columnb: String): String = {
+    Util.concat(cosineSimilarity,  table, columna, columnb)
   }
 
   def getDataFrameByTable(table: String): DataFrame = {
