@@ -26,6 +26,7 @@ object CrossTableCorrelation {
       val rdd = df.rdd
       val array = rdd.takeSample(false, limit)
       correlaval = computeCorrelation(df, column1, column2)
+      result = JsonFormat.formatNumberArray(array)
     } else {
       val df1 = getDataFrameByTable(table1).select(column1, join).filter(col(column1) =!= 0)
       val df2 = getDataFrameByTable(table2).select(column2, join).filter(col(column2) =!= 0)
@@ -33,9 +34,9 @@ object CrossTableCorrelation {
       val rdd = df.rdd
       val array = rdd.takeSample(false, limit)
       correlaval = computeCorrelation(df, column1, column2)
+      result = JsonFormat.formatNumberArray(array)
     }
-
-    result = JsonFormat.formatNumberArray(array)
+    
     result = addCorrelavalToResult(result, correlaval)
 
     Cache.putInCache(key, result)
