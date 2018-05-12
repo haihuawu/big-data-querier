@@ -36,7 +36,7 @@ object CrossTableCorrelation {
       correlaval = computeCorrelation(df, column1, column2)
       result = JsonFormat.formatNumberArray(array)
     }
-    
+
     result = addCorrelavalToResult(result, correlaval)
 
     Cache.putInCache(key, result)
