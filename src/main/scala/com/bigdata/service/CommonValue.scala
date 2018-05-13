@@ -1,9 +1,9 @@
 package com.bigdata.service
 
 import com.bigdata.spark.SparkFactory
-import com.bigdata.util.{AppConfig, JsonFormat, Util, Cache}
+import com.bigdata.util.{AppConfig, Cache, JsonFormat, Util}
 import org.apache.spark.sql._
-import org.apache.spark.sql.functions.col
+import org.apache.spark.sql.functions._
 
 import scala.util.control.Breaks._
 import scala.collection.mutable.ListBuffer
@@ -26,7 +26,7 @@ object CommonValue {
       joinedDataFrame = joinedDataFrame.join(dfs(i), joinedDataFrame("joined_column") === dfs(i)(columnArray(i)), "inner").select("joined_column")
     }
     println(joinedDataFrame.count())
-    joinedDataFrame = joinedDataFrame.groupBy("joined_column").count()
+    joinedDataFrame = joinedDataFrame.groupBy("joined_column").count().sort(desc("count"))
     val result = JsonFormat.format(joinedDataFrame.collect())
     Cache.putInCache(key, result)
     return result

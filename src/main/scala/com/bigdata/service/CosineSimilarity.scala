@@ -20,14 +20,14 @@ object CosineSimilarity {
     val dfa = getDataFrameByTable(table).select(columna, columnb)
     var rdd = dfa.rdd
     rdd = rdd.filter(line => line(0) != null && line(1) != null)
-    rdd = rdd.filter(line => line(0).toString() forall Character.isDigit)
-    rdd = rdd.filter(line => line(1).toString() forall Character.isDigit)
+    rdd = rdd.filter(line => line(0).toString forall Character.isDigit)
+    rdd = rdd.filter(line => line(1).toString forall Character.isDigit)
 
     val rowsVector = rdd.map{
         x =>
           Vectors.dense(
-            x(0).toString().toDouble,
-            x(1).toString().toDouble)
+            x(0).toString.toDouble,
+            x(1).toString.toDouble)
     }
 
     val mat = new RowMatrix(rowsVector)
