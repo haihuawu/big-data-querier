@@ -57,14 +57,10 @@ object CosineSimilarity {
 
     for (s <- similist) {
       json.append("{")
-      json.append("\"")
-      json.append(columna)
-      json.append("\" : ")
+      json.append("\"column1\" : ")
       json.append(s.i.toString)
       json.append(",")
-      json.append("\"")
-      json.append(columnb)
-      json.append("\" : ")
+      json.append("\"column2\" : ")
       json.append(s.j.toString)
       json.append(",")
       json.append("\"val\" : ")
